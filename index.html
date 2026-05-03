@@ -425,6 +425,7 @@
       <option value="deadline">Sort: Deadline</option>
       <option value="recent">Sort: Most Recent</option>
     </select>
+    <button id="btn-refresh" class="btn btn-ghost" title="Reload positions from server">↻ Refresh</button>
   </div>
 
   <div class="stats" id="stats"></div>
@@ -657,18 +658,30 @@
       : '<div class="empty-state">No positions match your filters.</div>';
   }
 
-  fetch('data/positions.json')
-    .then(r => r.json())
-    .then(data => {
-      allPositions = data.positions || [];
-      const ts = data.updated && data.updated !== 'never'
-        ? new Date(data.updated).toLocaleString() : 'not yet';
-      $updated.textContent = `Last updated: ${ts} · ${allPositions.length} positions indexed`;
-      render();
-    })
-    .catch(() => {
-      $grid.innerHTML = '<div class="empty-state">Could not load positions.json — run the scraper first.</div>';
-    });
+  function loadPositions() {
+    const $btn = document.getElementById('btn-refresh');
+    $btn.textContent = '↻ Refreshing…';
+    $btn.disabled = true;
+    fetch('data/positions.json?_=' + Date.now())
+      .then(r => r.json())
+      .then(data => {
+        allPositions = data.positions || [];
+        const ts = data.updated && data.updated !== 'never'
+          ? new Date(data.updated).toLocaleString() : 'not yet';
+        $updated.textContent = `Last updated: ${ts} · ${allPositions.length} positions indexed`;
+        render();
+      })
+      .catch(() => {
+        $grid.innerHTML = '<div class="empty-state">Could not load positions.json — run the scraper first.</div>';
+      })
+      .finally(() => {
+        $btn.textContent = '↻ Refresh';
+        $btn.disabled = false;
+      });
+  }
+
+  document.getElementById('btn-refresh').addEventListener('click', loadPositions);
+  loadPositions();
 
   /* ─────────────────── Source Bank ─────────────────── */
   function renderSources(sources) {
