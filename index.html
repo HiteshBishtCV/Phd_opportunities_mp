@@ -485,6 +485,11 @@
       </label>
     </div>
 
+    <div id="src-token-warning" style="display:none;background:#fff7ed;border:1.5px solid #fed7aa;border-radius:7px;padding:.6rem .85rem;font-size:.8rem;color:#9a3412;margin-bottom:.75rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem">
+      <span>⚠ No GitHub token set — commits will fail.</span>
+      <button class="btn btn-ghost btn-sm" id="btn-set-token-inline" style="white-space:nowrap;color:#9a3412;border-color:#fed7aa">Set Token →</button>
+    </div>
+
     <div class="status-msg" id="src-status"></div>
 
     <div class="modal-actions">
@@ -495,7 +500,7 @@
 </div>
 
 <!-- ══ Modal: GitHub Token Settings ══ -->
-<div class="modal-overlay" id="overlay-settings">
+<div class="modal-overlay" id="overlay-settings" style="z-index:200">
   <div class="modal">
     <h3>GitHub Token Settings</h3>
 
@@ -780,6 +785,11 @@
   }
 
   /* ─────────────────── Add / Edit Source Modal ─────────────────── */
+  function updateTokenWarning() {
+    const w = document.getElementById('src-token-warning');
+    w.style.display = getToken() ? 'none' : 'flex';
+  }
+
   function openAddModal() {
     document.getElementById('modal-source-title').textContent = 'Add New Source';
     document.getElementById('edit-idx').value = '';
@@ -789,6 +799,7 @@
     document.getElementById('src-notes').value  = '';
     document.getElementById('src-active').checked = true;
     document.getElementById('src-status').className = 'status-msg';
+    updateTokenWarning();
     document.getElementById('overlay-source').classList.add('open');
   }
 
@@ -802,8 +813,16 @@
     document.getElementById('src-notes').value  = s.notes || '';
     document.getElementById('src-active').checked = s.active;
     document.getElementById('src-status').className = 'status-msg';
+    updateTokenWarning();
     document.getElementById('overlay-source').classList.add('open');
   }
+
+  // "Set Token →" inside the source modal — opens settings on top without closing source form
+  document.getElementById('btn-set-token-inline').addEventListener('click', () => {
+    document.getElementById('gh-token').value = getToken();
+    document.getElementById('token-status').className = 'status-msg';
+    document.getElementById('overlay-settings').classList.add('open');
+  });
 
   function closeSourceModal() {
     document.getElementById('overlay-source').classList.remove('open');
@@ -874,7 +893,10 @@
     const $s = document.getElementById('token-status');
     $s.textContent = token ? '✅ Token saved.' : 'Token cleared.';
     $s.className = 'status-msg success';
-    setTimeout(() => document.getElementById('overlay-settings').classList.remove('open'), 900);
+    setTimeout(() => {
+      document.getElementById('overlay-settings').classList.remove('open');
+      updateTokenWarning();
+    }, 900);
   });
   document.getElementById('btn-test-token').addEventListener('click', async () => {
     const token = document.getElementById('gh-token').value.trim();
