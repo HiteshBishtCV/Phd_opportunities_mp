@@ -158,5 +158,13 @@
     "region": "USA",
     "active": false,
     "notes": "American Society for Radiation Oncology. Returned 403 as of 2026-05."
+  },
+  {
+    "name": "Duke",
+    "type": "rss",
+    "url": "https://gradschool.duke.edu/academics/programs-degrees/medical-physics/",
+    "region": "International",
+    "active": true,
+    "notes": ""
   }
 ]
