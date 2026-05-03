@@ -172,7 +172,7 @@
     "type": "rss",
     "url": "https://gradschool.duke.edu/academics/programs-degrees/medical-physics/",
     "region": "USA",
-    "active": true,
+    "active": false,
     "notes": ""
   }
 ]
