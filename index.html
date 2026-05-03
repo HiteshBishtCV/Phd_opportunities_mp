@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedPhys PhD Board</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --primary: #1a56a0;
+      --primary-hover: #2563c4;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --green: #16a34a;
+      --orange: #d97706;
+      --red: #dc2626;
+      --gray: #94a3b8;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #0f3460 0%, #1a56a0 60%, #0891b2 100%);
+      color: white;
+      padding: 2.5rem 1.5rem 2rem;
+      text-align: center;
+    }
+    header h1 { font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; }
+    header p  { margin-top: 0.4rem; opacity: 0.8; font-size: 0.9rem; }
+    #updated  { margin-top: 0.25rem; opacity: 0.6; font-size: 0.78rem; }
+
+    /* ── Controls ── */
+    .controls {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    }
+    #search {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.48rem 0.9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    #search:focus { border-color: var(--primary-hover); }
+
+    .region-btns { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .region-btns button {
+      padding: 0.35rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      background: transparent;
+      font-size: 0.82rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+    .region-btns button:hover,
+    .region-btns button.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    #sort {
+      padding: 0.42rem 0.7rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      background: white;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    /* ── Stats ── */
+    .stats { padding: 0.8rem 1.5rem; color: var(--text-muted); font-size: 0.85rem; }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.15rem;
+      padding: 0 1.5rem 2.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.05);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,.12);
+    }
+
+    .card-title { font-size: 0.97rem; font-weight: 600; line-height: 1.4; }
+    .card-title a { color: var(--primary); text-decoration: none; }
+    .card-title a:hover { text-decoration: underline; }
+
+    .card-meta { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.18rem 0.55rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+    .badge-usa   { background: #dbeafe; color: #1d4ed8; }
+    .badge-eur   { background: #dcfce7; color: #15803d; }
+    .badge-intl  { background: #f3e8ff; color: #7c3aed; }
+    .badge-grey  { background: #f1f5f9; color: var(--text-muted); }
+
+    .deadline {
+      font-size: 0.83rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .dl-ok      { color: var(--green); }
+    .dl-soon    { color: var(--orange); }
+    .dl-urgent  { color: var(--red); }
+    .dl-unknown { color: var(--gray); }
+
+    .skills { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .skill-tag {
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
+      padding: 0.13rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .professor { font-size: 0.8rem; color: var(--text-muted); }
+    .professor strong { color: var(--text); }
+
+    .description {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 0.6rem;
+      border-top: 1px solid var(--border);
+    }
+    .posted-date { font-size: 0.7rem; color: var(--text-muted); }
+
+    .view-btn {
+      display: inline-block;
+      padding: 0.38rem 0.85rem;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .view-btn:hover { background: var(--primary-hover); }
+
+    .empty-state, .loading {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 520px) {
+      .grid { grid-template-columns: 1fr; padding: 0 0.75rem 2rem; }
+      .controls { padding: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Medical Physics PhD Board</h1>
+  <p>Open PhD positions in Medical Physics — USA &amp; Europe</p>
+  <div id="updated"></div>
+</header>
+
+<div class="controls">
+  <input type="search" id="search" placeholder="Search title, institution, professor, skills…" />
+  <div class="region-btns">
+    <button class="active" data-region="all">All</button>
+    <button data-region="USA">USA</button>
+    <button data-region="Europe">Europe</button>
+    <button data-region="International">International</button>
+  </div>
+  <select id="sort">
+    <option value="deadline">Sort: Deadline</option>
+    <option value="recent">Sort: Most Recent</option>
+  </select>
+</div>
+
+<div class="stats" id="stats"></div>
+<div class="grid" id="positions"><div class="loading">Loading positions…</div></div>
+
+<script>
+  let allPositions = [];
+  let activeRegion = 'all';
+
+  const $search  = document.getElementById('search');
+  const $sort    = document.getElementById('sort');
+  const $stats   = document.getElementById('stats');
+  const $grid    = document.getElementById('positions');
+  const $updated = document.getElementById('updated');
+
+  document.querySelectorAll('.region-btns button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.region-btns button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeRegion = btn.dataset.region;
+      render();
+    });
+  });
+  $search.addEventListener('input', render);
+  $sort.addEventListener('change', render);
+
+  function regionBadgeClass(region) {
+    if (region === 'USA')           return 'badge badge-usa';
+    if (region === 'Europe')        return 'badge badge-eur';
+    if (region === 'International') return 'badge badge-intl';
+    return 'badge badge-grey';
+  }
+
+  function deadlineInfo(deadline) {
+    if (!deadline) return { cls: 'dl-unknown', label: '📅 Deadline unknown' };
+    const days = Math.round((new Date(deadline) - new Date()) / 86400000);
+    const fmt  = new Date(deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    if (days < 0)   return { cls: 'dl-urgent',  label: `📅 ${fmt} (closed)` };
+    if (days === 0) return { cls: 'dl-urgent',  label: `📅 ${fmt} (today!)` };
+    if (days <= 21) return { cls: 'dl-soon',    label: `📅 ${fmt} · ${days}d left` };
+    return              { cls: 'dl-ok',       label: `📅 ${fmt}` };
+  }
+
+  function esc(s) {
+    return String(s ?? '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function renderCard(p) {
+    const { cls, label } = deadlineInfo(p.deadline);
+    const skills = (p.skills || []).slice(0, 7)
+      .map(s => `<span class="skill-tag">${esc(s)}</span>`).join('');
+    const professor = p.professor
+      ? `<div class="professor">Contact: <strong>${esc(p.professor)}</strong></div>` : '';
+    const description = p.description
+      ? `<div class="description">${esc(p.description)}</div>` : '';
+    const institution = p.institution
+      ? `<span class="badge badge-grey">${esc(p.institution)}</span>` : '';
+    const location = p.location
+      ? `<span class="badge badge-grey">📍 ${esc(p.location)}</span>` : '';
+    const posted = p.posted_date
+      ? `Posted ${p.posted_date}` : `Scraped ${p.scraped_date || ''}`;
+
+    return `
+      <div class="card">
+        <div class="card-title">
+          <a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.title)}</a>
+        </div>
+        <div class="card-meta">
+          <span class="${regionBadgeClass(p.region)}">${esc(p.region || 'Unknown')}</span>
+          ${institution}
+          ${location}
+        </div>
+        <div class="deadline ${cls}">${label}</div>
+        ${skills ? `<div class="skills">${skills}</div>` : ''}
+        ${professor}
+        ${description}
+        <div class="card-footer">
+          <span class="posted-date">${esc(posted)} · ${esc(p.source || '')}</span>
+          <a class="view-btn" href="${esc(p.link)}" target="_blank" rel="noopener">View →</a>
+        </div>
+      </div>`;
+  }
+
+  function render() {
+    const q      = $search.value.trim().toLowerCase();
+    const sortBy = $sort.value;
+
+    let filtered = allPositions.filter(p => {
+      if (activeRegion !== 'all' && p.region !== activeRegion) return false;
+      if (!q) return true;
+      const hay = [p.title, p.institution, p.location, p.professor,
+                   ...(p.skills || []), p.description]
+        .filter(Boolean).join(' ').toLowerCase();
+      return q.split(/\s+/).every(word => hay.includes(word));
+    });
+
+    if (sortBy === 'recent') {
+      filtered.sort((a, b) =>
+        (b.posted_date || b.scraped_date || '') > (a.posted_date || a.scraped_date || '') ? 1 : -1);
+    } else {
+      filtered.sort((a, b) => {
+        if (a.deadline && b.deadline) return a.deadline.localeCompare(b.deadline);
+        if (a.deadline) return -1;
+        if (b.deadline) return 1;
+        return 0;
+      });
+    }
+
+    $stats.textContent = `${filtered.length} position${filtered.length !== 1 ? 's' : ''} found`;
+    $grid.innerHTML = filtered.length
+      ? filtered.map(renderCard).join('')
+      : '<div class="empty-state">No positions match your filters.</div>';
+  }
+
+  fetch('data/positions.json')
+    .then(r => r.json())
+    .then(data => {
+      allPositions = data.positions || [];
+      const ts = data.updated && data.updated !== 'never'
+        ? new Date(data.updated).toLocaleString() : 'not yet';
+      $updated.textContent = `Last updated: ${ts} · ${allPositions.length} positions indexed`;
+      render();
+    })
+    .catch(() => {
+      $grid.innerHTML = '<div class="empty-state">Could not load positions.json — run the scraper first.</div>';
+    });
+</script>
+</body>
+</html>
