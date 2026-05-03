@@ -1,0 +1,17 @@
+{
+  "_comment": "Add PhD positions here that you find manually. They will be merged into positions.json on every scraper run.",
+  "_fields": {
+    "title": "required — job title",
+    "link": "required — URL to the posting",
+    "institution": "optional — university or lab name",
+    "location": "optional — city/country",
+    "region": "optional — USA / Europe / International",
+    "deadline": "optional — YYYY-MM-DD",
+    "description": "optional — short description (max ~600 chars)",
+    "professor": "optional — PI / supervisor name",
+    "skills": "optional — list of relevant skills",
+    "posted_date": "optional — YYYY-MM-DD"
+  },
+  "positions": [
+  ]
+}

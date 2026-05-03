@@ -39,6 +39,38 @@
     header p  { margin-top: 0.4rem; opacity: 0.8; font-size: 0.9rem; }
     #updated  { margin-top: 0.25rem; opacity: 0.6; font-size: 0.78rem; }
 
+    /* ── Tab bar ── */
+    .tab-bar {
+      background: var(--surface);
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      padding: 0 1.5rem;
+      gap: 0;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    }
+    .tab-bar button {
+      padding: 0.85rem 1.3rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .tab-bar button:hover { color: var(--text); }
+    .tab-bar button.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+
+    /* ── Tab panes ── */
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
     /* ── Controls ── */
     .controls {
       background: var(--surface);
@@ -48,10 +80,6 @@
       flex-wrap: wrap;
       gap: 0.65rem;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 2px 8px rgba(0,0,0,.07);
     }
     #search {
       flex: 1;
@@ -96,7 +124,7 @@
     /* ── Stats ── */
     .stats { padding: 0.8rem 1.5rem; color: var(--text-muted); font-size: 0.85rem; }
 
-    /* ── Grid ── */
+    /* ── Positions Grid ── */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -106,7 +134,7 @@
       margin: 0 auto;
     }
 
-    /* ── Card ── */
+    /* ── Position Card ── */
     .card {
       background: var(--surface);
       border-radius: 12px;
@@ -118,10 +146,7 @@
       gap: 0.7rem;
       transition: transform 0.15s, box-shadow 0.15s;
     }
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 20px rgba(0,0,0,.12);
-    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,.12); }
 
     .card-title { font-size: 0.97rem; font-weight: 600; line-height: 1.4; }
     .card-title a { color: var(--primary); text-decoration: none; }
@@ -141,6 +166,8 @@
     .badge-eur   { background: #dcfce7; color: #15803d; }
     .badge-intl  { background: #f3e8ff; color: #7c3aed; }
     .badge-grey  { background: #f1f5f9; color: var(--text-muted); }
+    .badge-active   { background: #dcfce7; color: #15803d; }
+    .badge-inactive { background: #fee2e2; color: #b91c1c; }
 
     .deadline {
       font-size: 0.83rem;
@@ -210,9 +237,163 @@
       font-size: 0.95rem;
     }
 
+    /* ── Source Bank ── */
+    .source-toolbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .source-toolbar-stats { flex: 1; font-size: 0.85rem; color: var(--text-muted); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.42rem 0.95rem;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-ghost  { background: transparent; border: 1.5px solid var(--border); color: var(--text-muted); }
+    .btn-ghost:hover  { border-color: var(--primary); color: var(--primary); }
+    .btn-danger { background: #fee2e2; color: #b91c1c; border: 1.5px solid #fecaca; }
+    .btn-danger:hover { background: #fecaca; }
+    .btn-sm { padding: 0.25rem 0.6rem; font-size: 0.74rem; }
+
+    .source-section { padding: 1.5rem; max-width: 1400px; margin: 0 auto; }
+    .source-section h3 {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .source-card {
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .source-card.inactive { opacity: 0.65; }
+
+    .source-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+    .source-name { font-weight: 600; font-size: 0.92rem; flex: 1; }
+    .source-url {
+      font-size: 0.72rem;
+      color: var(--primary);
+      text-decoration: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      max-width: 100%;
+    }
+    .source-url:hover { text-decoration: underline; }
+    .source-notes { font-size: 0.76rem; color: var(--text-muted); line-height: 1.4; }
+    .source-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    /* ── Modals ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 1.75rem;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    }
+    .modal h3 { font-size: 1.05rem; margin-bottom: 1.25rem; }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-bottom: 0.3rem; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      font-size: 0.88rem;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--primary-hover); }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+
+    .form-check { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; cursor: pointer; }
+    .form-check input { width: auto; }
+
+    .modal-actions { display: flex; gap: 0.65rem; justify-content: flex-end; margin-top: 1.25rem; }
+
+    .status-msg {
+      padding: 0.55rem 0.8rem;
+      border-radius: 7px;
+      font-size: 0.82rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
+    .status-msg.success { background: #dcfce7; color: #15803d; display: block; }
+    .status-msg.error   { background: #fee2e2; color: #b91c1c; display: block; }
+    .status-msg.info    { background: #dbeafe; color: #1d4ed8; display: block; }
+
+    .token-hint {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      line-height: 1.5;
+    }
+    .token-hint a { color: var(--primary); }
+
     @media (max-width: 520px) {
       .grid { grid-template-columns: 1fr; padding: 0 0.75rem 2rem; }
       .controls { padding: 0.75rem; }
+      .source-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -224,24 +405,144 @@
   <div id="updated"></div>
 </header>
 
-<div class="controls">
-  <input type="search" id="search" placeholder="Search title, institution, professor, skills…" />
-  <div class="region-btns">
-    <button class="active" data-region="all">All</button>
-    <button data-region="USA">USA</button>
-    <button data-region="Europe">Europe</button>
-    <button data-region="International">International</button>
+<!-- ── Tabs ── -->
+<nav class="tab-bar">
+  <button class="active" data-tab="positions">📋 PhD Positions</button>
+  <button data-tab="sources">🔍 Source Bank</button>
+</nav>
+
+<!-- ══ Positions Tab ══ -->
+<div id="tab-positions" class="tab-pane active">
+  <div class="controls">
+    <input type="search" id="search" placeholder="Search title, institution, professor, skills…" />
+    <div class="region-btns">
+      <button class="active" data-region="all">All</button>
+      <button data-region="USA">USA</button>
+      <button data-region="Europe">Europe</button>
+      <button data-region="International">International</button>
+    </div>
+    <select id="sort">
+      <option value="deadline">Sort: Deadline</option>
+      <option value="recent">Sort: Most Recent</option>
+    </select>
   </div>
-  <select id="sort">
-    <option value="deadline">Sort: Deadline</option>
-    <option value="recent">Sort: Most Recent</option>
-  </select>
+
+  <div class="stats" id="stats"></div>
+  <div class="grid" id="positions"><div class="loading">Loading positions…</div></div>
 </div>
 
-<div class="stats" id="stats"></div>
-<div class="grid" id="positions"><div class="loading">Loading positions…</div></div>
+<!-- ══ Source Bank Tab ══ -->
+<div id="tab-sources" class="tab-pane">
+  <div class="source-toolbar">
+    <span class="source-toolbar-stats" id="source-stats">Loading sources…</span>
+    <button class="btn btn-ghost" id="btn-settings" title="GitHub settings">⚙ GitHub Token</button>
+    <button class="btn btn-primary" id="btn-add-source">＋ Add Source</button>
+  </div>
+
+  <div class="source-section">
+    <h3>✅ Active Sources — checked daily by the scraper</h3>
+    <div class="source-grid" id="active-sources">
+      <div style="color:var(--text-muted);font-size:.85rem">Loading…</div>
+    </div>
+
+    <h3>🗄 Inactive / Retired — kept for reference</h3>
+    <div class="source-grid" id="inactive-sources">
+      <div style="color:var(--text-muted);font-size:.85rem">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Modal: Add / Edit Source ══ -->
+<div class="modal-overlay" id="overlay-source">
+  <div class="modal">
+    <h3 id="modal-source-title">Add New Source</h3>
+    <input type="hidden" id="edit-idx" value="" />
+
+    <div class="form-group">
+      <label>Name *</label>
+      <input type="text" id="src-name" placeholder="e.g. AAPM Career Center" />
+    </div>
+    <div class="form-group">
+      <label>RSS Feed URL *</label>
+      <input type="url" id="src-url" placeholder="https://example.com/rss?keywords=medical+physics" />
+    </div>
+    <div class="form-group">
+      <label>Region</label>
+      <select id="src-region">
+        <option value="USA">USA</option>
+        <option value="Europe">Europe</option>
+        <option value="International" selected>International</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Notes (optional)</label>
+      <textarea id="src-notes" placeholder="Why is this source relevant? Is it blocked? Last checked?"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-check">
+        <input type="checkbox" id="src-active" checked />
+        Active (include in daily scrape)
+      </label>
+    </div>
+
+    <div class="status-msg" id="src-status"></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-cancel-source">Cancel</button>
+      <button class="btn btn-primary" id="btn-save-source">💾 Save &amp; Commit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Modal: GitHub Token Settings ══ -->
+<div class="modal-overlay" id="overlay-settings">
+  <div class="modal">
+    <h3>GitHub Token Settings</h3>
+
+    <div class="form-group">
+      <label>Personal Access Token (PAT)</label>
+      <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+      <p class="token-hint">
+        Create one at <a href="https://github.com/settings/tokens/new?scopes=contents&description=MedPhysBoard" target="_blank">github.com/settings/tokens</a>
+        with <strong>Contents: Read &amp; Write</strong> scope.<br>
+        Your token is stored only in this browser (localStorage) and sent directly to GitHub's API.
+      </p>
+    </div>
+    <div class="form-group">
+      <label class="form-check">
+        <input type="checkbox" id="token-remember" checked />
+        Remember in this browser
+      </label>
+    </div>
+
+    <div class="status-msg" id="token-status"></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      <button class="btn btn-ghost" id="btn-test-token">Test Connection</button>
+      <button class="btn btn-primary" id="btn-save-token">Save</button>
+    </div>
+  </div>
+</div>
 
 <script>
+  /* ─────────────────── Config ─────────────────── */
+  const REPO  = 'HiteshBishtCV/Phd_opportunities_mp';
+  const SOURCES_PATH = 'scraper/sources.json';
+
+  /* ─────────────────── Tab switching ─────────────────── */
+  let allSources = [];
+
+  document.querySelectorAll('.tab-bar button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  /* ─────────────────── Positions ─────────────────── */
   let allPositions = [];
   let activeRegion = 'all';
 
@@ -363,6 +664,247 @@
     .catch(() => {
       $grid.innerHTML = '<div class="empty-state">Could not load positions.json — run the scraper first.</div>';
     });
+
+  /* ─────────────────── Source Bank ─────────────────── */
+  function renderSources(sources) {
+    allSources = sources;
+    const active   = sources.filter(s => s.active);
+    const inactive = sources.filter(s => !s.active);
+
+    document.getElementById('source-stats').textContent =
+      `${sources.length} sources total · ${active.length} active · ${inactive.length} inactive`;
+
+    document.getElementById('active-sources').innerHTML =
+      active.length ? active.map((s, i) => sourceCard(s, sources.indexOf(s))).join('') :
+      '<div style="color:var(--text-muted);font-size:.85rem">No active sources.</div>';
+
+    document.getElementById('inactive-sources').innerHTML =
+      inactive.length ? inactive.map((s, i) => sourceCard(s, sources.indexOf(s))).join('') :
+      '<div style="color:var(--text-muted);font-size:.85rem">No inactive sources.</div>';
+
+    // Attach toggle/edit listeners
+    document.querySelectorAll('[data-action="toggle"]').forEach(btn => {
+      btn.addEventListener('click', () => toggleSource(+btn.dataset.idx));
+    });
+    document.querySelectorAll('[data-action="edit"]').forEach(btn => {
+      btn.addEventListener('click', () => openEditModal(+btn.dataset.idx));
+    });
+  }
+
+  function sourceCard(s, idx) {
+    const statusBadge = s.active
+      ? '<span class="badge badge-active">Active</span>'
+      : '<span class="badge badge-inactive">Inactive</span>';
+    const regionBadge = `<span class="${regionBadgeClass(s.region)}">${esc(s.region)}</span>`;
+    const notes = s.notes
+      ? `<div class="source-notes">${esc(s.notes)}</div>` : '';
+    const toggleLabel = s.active ? 'Disable' : 'Enable';
+    const toggleCls   = s.active ? 'btn-danger' : 'btn-ghost';
+
+    return `
+      <div class="source-card ${s.active ? '' : 'inactive'}">
+        <div class="source-card-header">
+          <span class="source-name">${esc(s.name)}</span>
+          ${statusBadge}
+        </div>
+        <a class="source-url" href="${esc(s.url)}" target="_blank" rel="noopener" title="${esc(s.url)}">${esc(s.url)}</a>
+        ${notes}
+        <div class="source-card-footer">
+          ${regionBadge}
+          <div style="display:flex;gap:.4rem">
+            <button class="btn btn-ghost btn-sm" data-action="edit" data-idx="${idx}">✏ Edit</button>
+            <button class="btn ${toggleCls} btn-sm" data-action="toggle" data-idx="${idx}">${toggleLabel}</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  fetch('scraper/sources.json')
+    .then(r => r.json())
+    .then(renderSources)
+    .catch(() => {
+      document.getElementById('source-stats').textContent = 'Could not load sources.json';
+    });
+
+  /* ─────────────────── GitHub API helpers ─────────────────── */
+  function getToken() {
+    return localStorage.getItem('gh_pat') || '';
+  }
+
+  async function ghGet(path) {
+    const token = getToken();
+    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      }
+    });
+    if (!res.ok) throw new Error(`GitHub ${res.status}: ${(await res.json()).message}`);
+    return res.json();
+  }
+
+  async function ghPut(path, content, sha, message) {
+    const token = getToken();
+    if (!token) throw new Error('No GitHub token set. Click "⚙ GitHub Token" to add one.');
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2) + '\n')));
+    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message, content: encoded, sha })
+    });
+    if (!res.ok) throw new Error(`Commit failed: ${(await res.json()).message}`);
+    return res.json();
+  }
+
+  async function commitSources(sources, message) {
+    const file = await ghGet(SOURCES_PATH);
+    await ghPut(SOURCES_PATH, sources, file.sha, message);
+  }
+
+  /* ─────────────────── Toggle active/inactive ─────────────────── */
+  async function toggleSource(idx) {
+    const s = allSources[idx];
+    const updated = allSources.map((src, i) =>
+      i === idx ? { ...src, active: !src.active } : src);
+    const action = s.active ? 'disable' : 'enable';
+    try {
+      await commitSources(updated, `sources: ${action} "${s.name}"`);
+      renderSources(updated);
+    } catch (e) {
+      alert('Could not commit: ' + e.message);
+    }
+  }
+
+  /* ─────────────────── Add / Edit Source Modal ─────────────────── */
+  function openAddModal() {
+    document.getElementById('modal-source-title').textContent = 'Add New Source';
+    document.getElementById('edit-idx').value = '';
+    document.getElementById('src-name').value   = '';
+    document.getElementById('src-url').value    = '';
+    document.getElementById('src-region').value = 'International';
+    document.getElementById('src-notes').value  = '';
+    document.getElementById('src-active').checked = true;
+    document.getElementById('src-status').className = 'status-msg';
+    document.getElementById('overlay-source').classList.add('open');
+  }
+
+  function openEditModal(idx) {
+    const s = allSources[idx];
+    document.getElementById('modal-source-title').textContent = 'Edit Source';
+    document.getElementById('edit-idx').value = idx;
+    document.getElementById('src-name').value   = s.name;
+    document.getElementById('src-url').value    = s.url;
+    document.getElementById('src-region').value = s.region;
+    document.getElementById('src-notes').value  = s.notes || '';
+    document.getElementById('src-active').checked = s.active;
+    document.getElementById('src-status').className = 'status-msg';
+    document.getElementById('overlay-source').classList.add('open');
+  }
+
+  function closeSourceModal() {
+    document.getElementById('overlay-source').classList.remove('open');
+  }
+
+  document.getElementById('btn-add-source').addEventListener('click', openAddModal);
+  document.getElementById('btn-cancel-source').addEventListener('click', closeSourceModal);
+
+  document.getElementById('btn-save-source').addEventListener('click', async () => {
+    const name   = document.getElementById('src-name').value.trim();
+    const url    = document.getElementById('src-url').value.trim();
+    const region = document.getElementById('src-region').value;
+    const notes  = document.getElementById('src-notes').value.trim();
+    const active = document.getElementById('src-active').checked;
+    const editIdx = document.getElementById('edit-idx').value;
+    const $status = document.getElementById('src-status');
+
+    if (!name || !url) {
+      $status.textContent = 'Name and URL are required.';
+      $status.className = 'status-msg error';
+      return;
+    }
+
+    $status.textContent = 'Committing to GitHub…';
+    $status.className = 'status-msg info';
+
+    const entry = { name, type: 'rss', url, region, active, notes };
+
+    let updated;
+    if (editIdx !== '') {
+      updated = allSources.map((s, i) => i === +editIdx ? entry : s);
+    } else {
+      updated = [...allSources, entry];
+    }
+
+    try {
+      await commitSources(updated, editIdx !== ''
+        ? `sources: update "${name}"`
+        : `sources: add "${name}"`);
+      renderSources(updated);
+      $status.textContent = '✅ Committed successfully!';
+      $status.className = 'status-msg success';
+      setTimeout(closeSourceModal, 1200);
+    } catch (e) {
+      $status.textContent = e.message;
+      $status.className = 'status-msg error';
+    }
+  });
+
+  /* ─────────────────── Settings Modal ─────────────────── */
+  document.getElementById('btn-settings').addEventListener('click', () => {
+    document.getElementById('gh-token').value = getToken();
+    document.getElementById('token-status').className = 'status-msg';
+    document.getElementById('overlay-settings').classList.add('open');
+  });
+  document.getElementById('btn-cancel-settings').addEventListener('click', () => {
+    document.getElementById('overlay-settings').classList.remove('open');
+  });
+  document.getElementById('btn-save-token').addEventListener('click', () => {
+    const token = document.getElementById('gh-token').value.trim();
+    const remember = document.getElementById('token-remember').checked;
+    if (remember && token) {
+      localStorage.setItem('gh_pat', token);
+    } else if (!remember) {
+      localStorage.removeItem('gh_pat');
+      sessionStorage.setItem('gh_pat_session', token);
+    }
+    const $s = document.getElementById('token-status');
+    $s.textContent = token ? '✅ Token saved.' : 'Token cleared.';
+    $s.className = 'status-msg success';
+    setTimeout(() => document.getElementById('overlay-settings').classList.remove('open'), 900);
+  });
+  document.getElementById('btn-test-token').addEventListener('click', async () => {
+    const token = document.getElementById('gh-token').value.trim();
+    const $s = document.getElementById('token-status');
+    $s.textContent = 'Testing…';
+    $s.className = 'status-msg info';
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO}`, {
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' }
+      });
+      const d = await res.json();
+      if (res.ok) {
+        $s.textContent = `✅ Connected — repo "${d.full_name}" is accessible.`;
+        $s.className = 'status-msg success';
+      } else {
+        $s.textContent = `❌ ${d.message}`;
+        $s.className = 'status-msg error';
+      }
+    } catch (e) {
+      $s.textContent = '❌ ' + e.message;
+      $s.className = 'status-msg error';
+    }
+  });
+
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) overlay.classList.remove('open');
+    });
+  });
 </script>
 </body>
 </html>

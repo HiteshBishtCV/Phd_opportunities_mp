@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """
-Scrapes Medical Physics PhD positions from free RSS feeds.
+Scrapes Medical Physics PhD positions from RSS feeds.
+
+Sources are configured in sources.json (active=true entries are scraped daily).
+Manual positions can be added to data/manual_positions.json.
+
 Run locally: cd scraper && python scrape.py
-Add new sources to the SOURCES list below.
 """
 
 import json
@@ -16,47 +19,14 @@ import requests
 from bs4 import BeautifulSoup
 from dateutil import parser as dateparser
 
-SOURCES = [
-    # USA
-    {
-        "name": "Physics Today Jobs",
-        "type": "rss",
-        "url": "https://jobs.physicstoday.org/jobs/rss/?keywords=medical+physics",
-        "region": "USA",
-    },
-    {
-        "name": "Academic Jobs Online",
-        "type": "rss",
-        "url": "https://academicjobsonline.org/ajo?joblist-0-0-0-0-3---------rss",
-        "region": "USA",
-    },
-    {
-        "name": "HigherEdJobs",
-        "type": "rss",
-        "url": "https://www.higheredjobs.com/rss/articleFeed.cfm?PosType=1&InstType=1&Keyword=medical+physics&CatType=",
-        "region": "USA",
-    },
-    # Europe
-    {
-        "name": "Jobs.ac.uk",
-        "type": "rss",
-        "url": "https://www.jobs.ac.uk/search/?keywords=medical+physics&type=rss",
-        "region": "Europe",
-    },
-    {
-        "name": "EURAXESS",
-        "type": "rss",
-        "url": "https://euraxess.ec.europa.eu/jobs/rss?keywords=medical+physics",
-        "region": "Europe",
-    },
-    # International
-    {
-        "name": "New Scientist Jobs",
-        "type": "rss",
-        "url": "https://jobs.newscientist.com/jobs/medical-physics/rss/",
-        "region": "International",
-    },
-]
+FETCH_TIMEOUT = 15  # seconds per source
+
+SCRAPER_DIR = Path(__file__).parent
+REPO_ROOT = SCRAPER_DIR.parent
+
+FEEDPARSER_UA = (
+    "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0"
+)
 
 SKILLS_KEYWORDS = [
     "Python", "MATLAB", "Monte Carlo", "Geant4", "GATE", "EGSnrc", "FLUKA",
@@ -81,13 +51,29 @@ PHYSICS_TERMS = [
 ]
 
 
+def load_sources() -> list:
+    path = SCRAPER_DIR / "sources.json"
+    sources = json.loads(path.read_text())
+    active = [s for s in sources if s.get("active", True)]
+    print(f"Loaded {len(active)} active sources (of {len(sources)} total in bank)\n")
+    return active
+
+
+def load_manual_positions() -> list:
+    path = REPO_ROOT / "data" / "manual_positions.json"
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text())
+    return data.get("positions", [])
+
+
 def extract_skills(text: str) -> list:
     found = []
     text_lower = text.lower()
     for skill in SKILLS_KEYWORDS:
         if skill.lower() in text_lower:
             found.append(skill)
-    return list(dict.fromkeys(found))  # dedupe, preserve order
+    return list(dict.fromkeys(found))
 
 
 def extract_deadline(text: str) -> str | None:
@@ -142,9 +128,16 @@ def make_id(url: str, title: str) -> str:
 def scrape_rss(source: dict) -> list:
     positions = []
     try:
-        feed = feedparser.parse(source["url"])
+        resp = requests.get(
+            source["url"],
+            headers={"User-Agent": FEEDPARSER_UA},
+            timeout=FETCH_TIMEOUT,
+            allow_redirects=True,
+        )
+        feed = feedparser.parse(resp.content)
+        status = resp.status_code
         if not feed.entries:
-            print(f"  No entries (feed may be empty or unreachable)")
+            print(f"  No entries (HTTP {status})")
             return positions
 
         for entry in feed.entries:
@@ -152,6 +145,8 @@ def scrape_rss(source: dict) -> list:
             raw = entry.get("summary", "")
             if not raw and hasattr(entry, "content"):
                 raw = entry.content[0].get("value", "")
+            if raw and len(raw) < 300 and "/" in raw and not raw.strip().startswith("<"):
+                raw = ""
             description = BeautifulSoup(raw, "html.parser").get_text(separator=" ").strip()
             link = entry.get("link", "")
 
@@ -180,16 +175,19 @@ def scrape_rss(source: dict) -> list:
                 "posted_date": pub_date,
                 "scraped_date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
             })
+    except requests.exceptions.Timeout:
+        print(f"  Timeout after {FETCH_TIMEOUT}s")
     except Exception as e:
         print(f"  Error: {e}")
     return positions
 
 
 def main():
+    sources = load_sources()
     all_positions: list = []
     seen_ids: set = set()
 
-    for source in SOURCES:
+    for source in sources:
         print(f"Scraping {source['name']}...")
         positions = scrape_rss(source) if source["type"] == "rss" else []
         new = [p for p in positions if p["id"] not in seen_ids]
@@ -198,20 +196,33 @@ def main():
             all_positions.append(p)
         print(f"  +{len(new)} PhD positions")
 
+    # Merge manual positions (skip duplicates by id or link)
+    manual = load_manual_positions()
+    manual_new = 0
+    for p in manual:
+        pid = p.get("id") or make_id(p.get("link", ""), p.get("title", ""))
+        p.setdefault("id", pid)
+        p.setdefault("source", "Manual")
+        p.setdefault("scraped_date", datetime.now(timezone.utc).strftime("%Y-%m-%d"))
+        if pid not in seen_ids:
+            seen_ids.add(pid)
+            all_positions.append(p)
+            manual_new += 1
+    if manual:
+        print(f"\nManual positions: +{manual_new} (of {len(manual)} in bank)")
+
     def sort_key(p):
         return (0, p["deadline"]) if p["deadline"] else (1, p.get("posted_date") or "")
 
     all_positions.sort(key=sort_key)
 
-    output = {
+    out_path = REPO_ROOT / "data" / "positions.json"
+    out_path.parent.mkdir(exist_ok=True)
+    out_path.write_text(json.dumps({
         "updated": datetime.now(timezone.utc).isoformat(),
         "count": len(all_positions),
         "positions": all_positions,
-    }
-
-    out_path = Path(__file__).parent.parent / "data" / "positions.json"
-    out_path.parent.mkdir(exist_ok=True)
-    out_path.write_text(json.dumps(output, indent=2))
+    }, indent=2))
     print(f"\nTotal: {len(all_positions)} positions → {out_path}")
 
 

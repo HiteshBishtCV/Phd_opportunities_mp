@@ -1,0 +1,162 @@
+[
+  {
+    "name": "Physics Today Jobs",
+    "type": "rss",
+    "url": "https://jobs.physicstoday.org/jobs/rss/?keywords=medical+physics",
+    "region": "USA",
+    "active": true,
+    "notes": "AIP publication job board. Returns 202 (async); entries appear during hiring season."
+  },
+  {
+    "name": "HigherEdJobs",
+    "type": "rss",
+    "url": "https://www.higheredjobs.com/rss/articleFeed.cfm?PosType=1&InstType=1&Keyword=medical+physics&CatType=",
+    "region": "USA",
+    "active": true,
+    "notes": "Large US academic job board."
+  },
+  {
+    "name": "Chronicle of Higher Education",
+    "type": "rss",
+    "url": "https://jobs.chronicle.com/jobs/rss?keywords=medical+physics",
+    "region": "USA",
+    "active": true,
+    "notes": "Major US academic job publication."
+  },
+  {
+    "name": "Inside Higher Ed Jobs",
+    "type": "rss",
+    "url": "https://careers.insidehighered.com/jobs/rss?keywords=medical+physics",
+    "region": "USA",
+    "active": true,
+    "notes": ""
+  },
+  {
+    "name": "Science Careers (AAAS)",
+    "type": "rss",
+    "url": "https://jobs.sciencecareers.org/jobs/rss/?KeyWords=medical+physics",
+    "region": "International",
+    "active": true,
+    "notes": "AAAS job board. One of the largest academic science job boards."
+  },
+  {
+    "name": "Jobs.ac.uk",
+    "type": "rss",
+    "url": "https://www.jobs.ac.uk/search/?keywords=medical+physics&type=rss",
+    "region": "Europe",
+    "active": true,
+    "notes": "Largest UK academic job board. RSS returns valid 200 but may be JS-gated; retry periodically."
+  },
+  {
+    "name": "EURAXESS",
+    "type": "rss",
+    "url": "https://euraxess.ec.europa.eu/jobs/rss?keywords=medical+physics",
+    "region": "Europe",
+    "active": true,
+    "notes": "European Commission researcher mobility portal. URL may have changed — check euraxess.ec.europa.eu if 404."
+  },
+  {
+    "name": "Times Higher Education Jobs",
+    "type": "rss",
+    "url": "https://www.timeshighereducation.com/unijobs/listings/rss/?keywords=medical+physics",
+    "region": "Europe",
+    "active": true,
+    "notes": ""
+  },
+  {
+    "name": "New Scientist Jobs",
+    "type": "rss",
+    "url": "https://jobs.newscientist.com/jobs/medical-physics/rss/",
+    "region": "International",
+    "active": true,
+    "notes": "UK-based international science job board."
+  },
+  {
+    "name": "FindAPhD",
+    "type": "rss",
+    "url": "https://www.findaphd.com/phds/rss/?Keywords=medical+physics",
+    "region": "International",
+    "active": true,
+    "notes": "Largest dedicated PhD listing site. Currently Cloudflare-blocked (403) from CI; try manually at findaphd.com."
+  },
+  {
+    "name": "Nature Careers",
+    "type": "rss",
+    "url": "https://www.nature.com/naturecareers/jobs/rss?term=medical+physics",
+    "region": "International",
+    "active": true,
+    "notes": "Nature publishing group career board."
+  },
+  {
+    "name": "Global Academy Jobs",
+    "type": "rss",
+    "url": "https://www.globalacademyjobs.com/jobs/rss/?keywords=medical+physics",
+    "region": "International",
+    "active": true,
+    "notes": ""
+  },
+  {
+    "name": "APS Physics Jobs",
+    "type": "rss",
+    "url": "https://jobs.aps.org/jobs/rss?keywords=medical+physics",
+    "region": "USA",
+    "active": false,
+    "notes": "American Physical Society. Returned 404 as of 2026-05 — URL may have moved."
+  },
+  {
+    "name": "Academic Jobs Online",
+    "type": "rss",
+    "url": "https://academicjobsonline.org/ajo?joblist-0-0-0-0-3---------rss",
+    "region": "USA",
+    "active": false,
+    "notes": "Returned HTTP 410 Gone as of 2026-05. Site may have shut down or restructured."
+  },
+  {
+    "name": "AAPM Career Center",
+    "type": "rss",
+    "url": "https://careers.aapm.org/jobs/rss?keywords=phd",
+    "region": "USA",
+    "active": false,
+    "notes": "American Association of Physicists in Medicine. Returned 404 as of 2026-05 — check aapm.org for updated URL."
+  },
+  {
+    "name": "Academic Positions (EU)",
+    "type": "rss",
+    "url": "https://academicpositions.eu/jobs/rss?keywords=medical+physics",
+    "region": "Europe",
+    "active": false,
+    "notes": "Returned 403 as of 2026-05."
+  },
+  {
+    "name": "ResearchGate Jobs",
+    "type": "rss",
+    "url": "https://www.researchgate.net/jobs/rss?query=medical+physics+phd",
+    "region": "International",
+    "active": false,
+    "notes": "Returned 403 as of 2026-05. ResearchGate blocks automated access."
+  },
+  {
+    "name": "IEEE Jobs",
+    "type": "rss",
+    "url": "https://jobs.ieee.org/jobs/rss?keywords=medical+physics",
+    "region": "International",
+    "active": false,
+    "notes": "Returned 403 as of 2026-05."
+  },
+  {
+    "name": "PhysicsWorld Jobs (IOP)",
+    "type": "rss",
+    "url": "https://physicsworld.com/jobs/?q=medical+physics&format=rss",
+    "region": "International",
+    "active": false,
+    "notes": "Institute of Physics career board. Returned 403 as of 2026-05."
+  },
+  {
+    "name": "ASTRO Careers",
+    "type": "rss",
+    "url": "https://careers.astro.org/jobs/rss",
+    "region": "USA",
+    "active": false,
+    "notes": "American Society for Radiation Oncology. Returned 403 as of 2026-05."
+  }
+]
