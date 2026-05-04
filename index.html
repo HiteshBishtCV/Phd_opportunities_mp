@@ -390,10 +390,141 @@
     }
     .token-hint a { color: var(--primary); }
 
+    /* ── Universities ── */
+    .uni-controls {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+    }
+    #uni-search {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.48rem 0.9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    #uni-search:focus { border-color: var(--primary-hover); }
+
+    .uni-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.15rem;
+      padding: 0 1.5rem 2.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .uni-card {
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 12px rgba(0,0,0,.05);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .uni-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,.12); }
+
+    .uni-name { font-size: 1rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+    .uni-dept { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.1rem; }
+
+    .uni-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
+
+    .badge-campep { background: #fef3c7; color: #92400e; }
+    .badge-funded { background: #d1fae5; color: #065f46; }
+    .badge-canada { background: #fee2e2; color: #991b1b; }
+    .badge-aus    { background: #fce7f3; color: #9d174d; }
+
+    .uni-deadline {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .uni-intake { font-size: 0.78rem; color: var(--text-muted); }
+
+    .uni-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .uni-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+    .uni-link:hover { border-color: var(--primary); color: var(--primary); background: #f0f7ff; }
+    .uni-link.primary-link {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .uni-link.primary-link:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+
+    .uni-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .uni-tag {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 500;
+    }
+
+    .uni-notes {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .uni-stats { padding: 0.8rem 1.5rem; color: var(--text-muted); font-size: 0.85rem; }
+
+    .toggle-btn {
+      padding: 0.35rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      background: transparent;
+      font-size: 0.82rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+    .toggle-btn:hover,
+    .toggle-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
     @media (max-width: 520px) {
       .grid { grid-template-columns: 1fr; padding: 0 0.75rem 2rem; }
       .controls { padding: 0.75rem; }
       .source-grid { grid-template-columns: 1fr; }
+      .uni-grid { grid-template-columns: 1fr; padding: 0 0.75rem 2rem; }
     }
   </style>
 </head>
@@ -408,6 +539,7 @@
 <!-- ── Tabs ── -->
 <nav class="tab-bar">
   <button class="active" data-tab="positions">📋 PhD Positions</button>
+  <button data-tab="universities">🎓 Universities</button>
   <button data-tab="sources">🔍 Source Bank</button>
 </nav>
 
@@ -430,6 +562,25 @@
 
   <div class="stats" id="stats"></div>
   <div class="grid" id="positions"><div class="loading">Loading positions…</div></div>
+</div>
+
+<!-- ══ Universities Tab ══ -->
+<div id="tab-universities" class="tab-pane">
+  <div class="uni-controls">
+    <input type="search" id="uni-search" placeholder="Search university, department, tags…" />
+    <div class="region-btns" id="uni-region-btns">
+      <button class="active" data-region="all">All</button>
+      <button data-region="USA">USA</button>
+      <button data-region="Canada">Canada</button>
+      <button data-region="Europe">Europe</button>
+      <button data-region="Australia">Australia</button>
+    </div>
+    <button class="toggle-btn" id="uni-campep-toggle" data-on="false">CAMPEP Only</button>
+    <button class="toggle-btn" id="uni-funded-toggle" data-on="false">Funded Only</button>
+  </div>
+
+  <div class="uni-stats" id="uni-stats"></div>
+  <div class="uni-grid" id="uni-grid"><div class="loading">Loading programs…</div></div>
 </div>
 
 <!-- ══ Source Bank Tab ══ -->
@@ -940,6 +1091,115 @@
       if (e.target === overlay) overlay.classList.remove('open');
     });
   });
+
+  /* ─────────────────── Universities ─────────────────── */
+  let allPrograms = [];
+  let uniRegion   = 'all';
+  let uniCampep   = false;
+  let uniFunded   = false;
+
+  const $uniSearch = document.getElementById('uni-search');
+  const $uniGrid   = document.getElementById('uni-grid');
+  const $uniStats  = document.getElementById('uni-stats');
+
+  document.getElementById('uni-region-btns').querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('uni-region-btns').querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      uniRegion = btn.dataset.region;
+      renderUniversities();
+    });
+  });
+
+  $uniSearch.addEventListener('input', renderUniversities);
+
+  document.getElementById('uni-campep-toggle').addEventListener('click', function() {
+    uniCampep = !uniCampep;
+    this.dataset.on = uniCampep;
+    this.classList.toggle('active', uniCampep);
+    renderUniversities();
+  });
+
+  document.getElementById('uni-funded-toggle').addEventListener('click', function() {
+    uniFunded = !uniFunded;
+    this.dataset.on = uniFunded;
+    this.classList.toggle('active', uniFunded);
+    renderUniversities();
+  });
+
+  function regionBadgeForUni(region) {
+    if (region === 'USA')       return 'badge badge-usa';
+    if (region === 'Canada')    return 'badge badge-canada';
+    if (region === 'Europe')    return 'badge badge-eur';
+    if (region === 'Australia') return 'badge badge-aus';
+    return 'badge badge-intl';
+  }
+
+  function renderUniCard(p) {
+    const regionBadge  = `<span class="${regionBadgeForUni(p.region)}">${esc(p.region)}</span>`;
+    const campepBadge  = p.campep  ? '<span class="badge badge-campep">CAMPEP</span>' : '';
+    const fundedBadge  = p.funded  ? '<span class="badge badge-funded">Funded</span>' : '';
+    const cityBadge    = p.city    ? `<span class="badge badge-grey">📍 ${esc(p.city)}</span>` : '';
+
+    const deadlineHtml = p.deadline
+      ? `<div class="uni-deadline">📅 Deadline: ${esc(p.deadline)}</div>` : '';
+    const intakeHtml   = p.intake
+      ? `<div class="uni-intake">Intake: ${esc(p.intake)}</div>` : '';
+
+    const links = [];
+    if (p.program_url) links.push(`<a class="uni-link primary-link" href="${esc(p.program_url)}" target="_blank" rel="noopener">Program</a>`);
+    if (p.apply_url)   links.push(`<a class="uni-link" href="${esc(p.apply_url)}"   target="_blank" rel="noopener">Apply</a>`);
+    if (p.faculty_url) links.push(`<a class="uni-link" href="${esc(p.faculty_url)}" target="_blank" rel="noopener">Faculty</a>`);
+    if (p.labs_url)    links.push(`<a class="uni-link" href="${esc(p.labs_url)}"    target="_blank" rel="noopener">Labs</a>`);
+
+    const tags = (p.tags || []).map(t => `<span class="uni-tag">${esc(t)}</span>`).join('');
+    const notes = p.notes ? `<div class="uni-notes">${esc(p.notes)}</div>` : '';
+
+    return `
+      <div class="uni-card">
+        <div>
+          <div class="uni-name">${esc(p.name)}</div>
+          <div class="uni-dept">${esc(p.department || '')}</div>
+        </div>
+        <div class="uni-meta">
+          ${regionBadge}${campepBadge}${fundedBadge}${cityBadge}
+        </div>
+        ${deadlineHtml}
+        ${intakeHtml}
+        ${notes}
+        ${tags ? `<div class="uni-tags">${tags}</div>` : ''}
+        <div class="uni-links">${links.join('')}</div>
+      </div>`;
+  }
+
+  function renderUniversities() {
+    const q = $uniSearch.value.trim().toLowerCase();
+
+    let filtered = allPrograms.filter(p => {
+      if (uniRegion !== 'all' && p.region !== uniRegion) return false;
+      if (uniCampep && !p.campep)   return false;
+      if (uniFunded && !p.funded)   return false;
+      if (!q) return true;
+      const hay = [p.name, p.department, p.city, p.country, p.notes,
+                   ...(p.tags || [])].filter(Boolean).join(' ').toLowerCase();
+      return q.split(/\s+/).every(w => hay.includes(w));
+    });
+
+    $uniStats.textContent = `${filtered.length} program${filtered.length !== 1 ? 's' : ''} found`;
+    $uniGrid.innerHTML = filtered.length
+      ? filtered.map(renderUniCard).join('')
+      : '<div class="empty-state">No programs match your filters.</div>';
+  }
+
+  fetch('data/universities.json?_=' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      allPrograms = data.programs || [];
+      renderUniversities();
+    })
+    .catch(() => {
+      $uniGrid.innerHTML = '<div class="empty-state">Could not load universities.json.</div>';
+    });
 </script>
 </body>
 </html>
