@@ -1,5 +1,29 @@
 {
-  "updated": "2026-05-04T08:52:32.751066+00:00",
-  "count": 0,
-  "positions": []
+  "updated": "2026-05-04T08:58:30.134480+00:00",
+  "count": 1,
+  "positions": [
+    {
+      "title": "PhD student in Medical Physics and Radiopharmaceutical Sciences",
+      "link": "https://www.efomp.org/index.php?r=jobs/view&id=206",
+      "institution": "German Cancer Research Center (DKFZ)",
+      "location": "Heidelberg, Germany",
+      "region": "Europe",
+      "deadline": "2026-04-21",
+      "description": "Multidisciplinary PhD in Imaging and Radiooncology integrating physical and chemical methods into cancer research. Topics include advanced imaging (CT, MRI, PET, hyperpolarized MRI), precision radiation therapy (IMRT, IGRT, MR-guided, proton/ion beam), imaging data science, and radiopharmaceutical development. Open to physicists, mathematicians, computer scientists, engineers, biologists, pharmacists, and chemists.",
+      "skills": [
+        "MRI",
+        "CT",
+        "PET",
+        "radiation therapy",
+        "radiotherapy",
+        "proton therapy",
+        "medical imaging",
+        "dosimetry"
+      ],
+      "posted_date": "2026-04-21",
+      "source": "EFOMP",
+      "id": "ec7ba4ad601c",
+      "scraped_date": "2026-05-04"
+    }
+  ]
 }
